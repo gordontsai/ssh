@@ -4,7 +4,7 @@ import os
 import sys
 import boto3
 
-accepted_actions = ["start", "stop"]
+accepted_actions = ["start", "stop", "terminate"]
 
 def usage():
   print("Usage: ec2 (%s) instance-name" % " | ".join(accepted_actions))
@@ -81,9 +81,21 @@ def stop(instance):
     instance_state = 'stopped'
   print('Instance is stopped')
 
+def terminate(instance):
+  instance_state = instance.state['Name']
+  if instance_state == 'shutting-down':
+    print("Instance is already terminating")
+    return
+  if instance_state == 'terminated':
+    print("Instance is already terminated")
+    return
+  instance.terminate()
+  print('Instance is terminating')
+
 actions = {
   'start': start,
-  'stop': stop
+  'stop': stop,
+  'terminate': terminate,
 }
 
 ec2 = boto3.resource('ec2')

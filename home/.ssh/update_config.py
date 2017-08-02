@@ -3,7 +3,7 @@ import importlib.util
 import sys
 sys.dont_write_bytecode = True
 
-if sys.version_info() < (3, 0):
+if sys.version_info < (3, 0):
   print("Python3 is required to run this script")
   exit(1)
 
